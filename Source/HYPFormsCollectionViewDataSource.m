@@ -285,7 +285,19 @@ static const CGFloat HYPFormsDispatchTime = 0.05f;
 
 - (void)insertField:(HYPFormField *)field inSectionWithID:(NSString *)sectionID
 {
+    HYPFormSection *section = [self.formsManager sectionWithID:sectionID];
 
+    [section.fields addObject:field];
+
+    NSMutableSet *insertedIndexPaths = [NSMutableSet new];
+
+    [self.formsManager fieldWithID:field.fieldID
+             includingHiddenFields:YES
+                        completion:^(HYPFormField *field, NSIndexPath *indexPath) {
+                            if (indexPath) [insertedIndexPaths addObject:indexPath];
+                        }];
+
+    [self insertItemsAtIndexPaths:[insertedIndexPaths allObjects]];
 }
 
 - (void)insertSection:(HYPFormSection *)section inFormWithID:(NSString *)formID
