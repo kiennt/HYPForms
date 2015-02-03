@@ -182,6 +182,43 @@
     XCTAssertEqual(numberOfItemsBeforeInsert + 1, [self.collectionView numberOfItemsInSection:2]);
 }
 
+- (void)testInsertSectionInForm
+{
+    HYPFormSection *section = [[HYPFormSection alloc] initWithDictionary:@{@"id" : @"companies[2]",
+                                                                           @"fields" : @[@{@"id" : @"companies[2].name",
+                                                                                           @"title" : @"Name 3",
+                                                                                           @"type" : @"name",
+                                                                                           @"size" : @{@"width" : @70,
+                                                                                                       @"height" : @1}
+                                                                                           },
+                                                                                         @{@"id" : @"companies[2].phone_number",
+                                                                                           @"title" : @"Phone number 3",
+                                                                                           @"type" : @"number",
+                                                                                           @"size" : @{@"width" : @30,
+                                                                                                       @"height" : @1}
+                                                                                           }]}
+                                                                position:2
+                                                                disabled:NO
+                                                       disabledFieldsIDs:nil
+                                                           isLastSection:YES];
+
+    NSInteger numberOfItemsBeforeInsert = [self.collectionView numberOfItemsInSection:2];
+
+    [self.dataSource insertSection:section inFormWithID:@"companies"];
+
+    XCTAssertEqual(numberOfItemsBeforeInsert + 2, [self.collectionView numberOfItemsInSection:2]);
+}
+
+- (void)testRemoveFieldWithID
+{
+    [self.dataSource removeFieldWithID:@"companies[0].name"];
+}
+
+- (void)testRemoveSectionWithID
+{
+    [self.dataSource removeSectionWithID:@"companies[0]"];
+}
+
 #pragma mark - HYPFormsLayoutDataSource
 
 - (NSArray *)forms
