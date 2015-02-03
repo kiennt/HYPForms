@@ -28,14 +28,14 @@
     layout.dataSource = self;
 
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:[[UIScreen mainScreen] bounds]
-                                             collectionViewLayout:layout];
+                                                          collectionViewLayout:layout];
 
     NSArray *JSON = [NSJSONSerialization JSONObjectWithContentsOfFile:@"forms.json"];
 
     self.formsManager = [[HYPFormsManager alloc] initWithJSON:JSON
-                                           initialValues:nil
-                                        disabledFieldIDs:nil
-                                                disabled:NO];
+                                                initialValues:nil
+                                             disabledFieldIDs:nil
+                                                     disabled:NO];
 
     self.dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:collectionView
                                                                        andFormsManager:self.formsManager];
