@@ -11,7 +11,7 @@
 
 #import "NSJSONSerialization+ANDYJSONFile.h"
 
-@interface HYPFormsCollectionViewDataSourceTests : XCTestCase <HYPFormsLayoutDataSource>
+@interface HYPFormsCollectionViewDataSourceTests : XCTestCase
 
 @property (nonatomic, strong) HYPFormsManager *formsManager;
 @property (nonatomic, strong) HYPFormsCollectionViewDataSource *dataSource;
@@ -24,12 +24,6 @@
 {
     [super setUp];
 
-    HYPFormsLayout *layout = [[HYPFormsLayout alloc] init];
-    layout.dataSource = self;
-
-    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:[[UIScreen mainScreen] bounds]
-                                                          collectionViewLayout:layout];
-
     NSArray *JSON = [NSJSONSerialization JSONObjectWithContentsOfFile:@"forms.json"];
 
     self.formsManager = [[HYPFormsManager alloc] initWithJSON:JSON
@@ -37,7 +31,7 @@
                                              disabledFieldIDs:nil
                                                      disabled:NO];
 
-    self.dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:collectionView
+    self.dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:nil
                                                                        andFormsManager:self.formsManager];
 }
 
@@ -215,18 +209,6 @@
 - (void)testRemoveSectionWithID
 {
     [self.dataSource removeSectionWithID:@"companies[0]"];
-}
-
-#pragma mark - HYPFormsLayoutDataSource
-
-- (NSArray *)forms
-{
-    return self.formsManager.forms;
-}
-
-- (NSArray *)collapsedForms
-{
-    return self.dataSource.collapsedForms;
 }
 
 @end
