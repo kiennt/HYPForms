@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) HYPFormsManager *manager;
 @property (nonatomic, strong) HYPFormsCollectionViewDataSource *dataSource;
+@property (nonatomic, strong) UICollectionView *collectionView;
 
 @end
 
@@ -27,8 +28,8 @@
     HYPFormsLayout *layout = [[HYPFormsLayout alloc] init];
     layout.dataSource = self;
 
-    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:[[UIScreen mainScreen] bounds]
-                                                          collectionViewLayout:layout];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:[[UIScreen mainScreen] bounds]
+                                             collectionViewLayout:layout];
 
     NSArray *JSON = [NSJSONSerialization JSONObjectWithContentsOfFile:@"forms.json"];
 
@@ -37,7 +38,7 @@
                                         disabledFieldIDs:nil
                                                 disabled:NO];
 
-    self.dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:collectionView
+    self.dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
                                                                        andFormsManager:self.manager];
 }
 
@@ -45,6 +46,7 @@
 {
     self.manager = nil;
     self.dataSource = nil;
+    self.collectionView = nil;
 
     [super tearDown];
 }
@@ -152,6 +154,32 @@
 
     HYPFormField *field = [self.manager fieldWithID:@"display_name" includingHiddenFields:YES];
     XCTAssertEqualObjects(field.fieldValue, @"Elvis Nunez");
+}
+
+- (void)testInsertFieldInSection
+{
+    HYPFormField *field = [[HYPFormField alloc] initWithDictionary:@{@"id" : @"companies[1].fax_number",
+                                                                     @"title" : @"Fax number 1",
+                                                                     @"type" : @"number",
+                                                                     @"size" : @{@"width" : @30,
+                                                                                 @"height" : @1}
+                                                                     }
+                                                          position:2
+                                                          disabled:NO
+                                                 disabledFieldsIDs:nil];
+
+    NSInteger numberOfItemsBeforeInsert = [self.collectionView numberOfItemsInSection:2];
+
+    HYPFormSection *section = [self.manager sectionWithID:@"companies[1]"];
+    NSInteger numberOfFields = section.fields.count;
+    XCTAssertEqual(numberOfFields, 2);
+
+    [self.dataSource insertField:field inSectionWithID:@"companies[1]"];
+
+    section = [self.manager sectionWithID:@"companies[1]"];
+    XCTAssertEqual(section.fields.count, numberOfFields + 1);
+
+    XCTAssertEqual(numberOfItemsBeforeInsert + 1, [self.collectionView numberOfItemsInSection:2]);
 }
 
 #pragma mark - HYPFormsLayoutDataSource
