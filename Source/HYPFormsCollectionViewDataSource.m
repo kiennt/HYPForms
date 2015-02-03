@@ -283,6 +283,26 @@ static const CGFloat HYPFormsDispatchTime = 0.05f;
     return field;
 }
 
+- (void)insertField:(HYPFormField *)field inSectionWithID:(NSString *)sectionID
+{
+
+}
+
+- (void)insertSection:(HYPFormSection *)section inFormWithID:(NSString *)formID
+{
+
+}
+
+- (void)removeFieldWithID:(NSString *)fieldID
+{
+
+}
+
+- (void)removeSectionWithID:(NSString *)sectionID
+{
+
+}
+
 - (void)enable
 {
     [self disable:NO];

@@ -32,8 +32,6 @@ typedef void (^HYPFieldConfigureFieldUpdatedBlock)(id cell, HYPFormField *field)
 @property (nonatomic, weak) id <HYPFormsCollectionViewDataSourceDataSource> dataSource;
 
 - (BOOL)formFieldsAreValid;
-- (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
-- (HYPFormField *)formFieldAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)resetForms;
 - (void)validateForms;
@@ -52,6 +50,15 @@ typedef void (^HYPFieldConfigureFieldUpdatedBlock)(id cell, HYPFormField *field)
 - (void)insertItemsAtIndexPaths:(NSArray *)indexPaths;
 - (void)deleteItemsAtIndexPaths:(NSArray *)indexPaths;
 - (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths;
+
+- (CGSize)sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (HYPFormField *)formFieldAtIndexPath:(NSIndexPath *)indexPath;
+
+- (void)insertField:(HYPFormField *)field inSectionWithID:(NSString *)sectionID;
+- (void)insertSection:(HYPFormSection *)section inFormWithID:(NSString *)formID;
+
+- (void)removeFieldWithID:(NSString *)fieldID;
+- (void)removeSectionWithID:(NSString *)sectionID;
 
 @end
 
