@@ -11,11 +11,16 @@
 
 #import "NSJSONSerialization+ANDYJSONFile.h"
 
+@interface HYPFormsCollectionViewDataSource ()
+
+@property (nonatomic, weak) UICollectionView *collectionView;
+
+@end
+
 @interface HYPFormsCollectionViewDataSourceTests : XCTestCase <HYPFormsLayoutDataSource>
 
 @property (nonatomic, strong) HYPFormsManager *formsManager;
 @property (nonatomic, strong) HYPFormsCollectionViewDataSource *dataSource;
-@property (nonatomic, strong) UICollectionView *collectionView;
 
 @end
 
@@ -28,7 +33,7 @@
     HYPFormsLayout *layout = [[HYPFormsLayout alloc] init];
     layout.dataSource = self;
 
-    self.collectionView = [[UICollectionView alloc] initWithFrame:[[UIScreen mainScreen] bounds]
+    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:[[UIScreen mainScreen] bounds]
                                              collectionViewLayout:layout];
 
     NSArray *JSON = [NSJSONSerialization JSONObjectWithContentsOfFile:@"forms.json"];
@@ -38,7 +43,7 @@
                                         disabledFieldIDs:nil
                                                 disabled:NO];
 
-    self.dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:self.collectionView
+    self.dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:collectionView
                                                                        andFormsManager:self.formsManager];
 }
 
@@ -46,7 +51,6 @@
 {
     self.formsManager = nil;
     self.dataSource = nil;
-    self.collectionView = nil;
 
     [super tearDown];
 }
@@ -168,7 +172,7 @@
                                                           disabled:NO
                                                  disabledFieldsIDs:nil];
 
-    NSInteger numberOfItemsBeforeInsert = [self.collectionView numberOfItemsInSection:2];
+    NSInteger numberOfItemsBeforeInsert = [self.dataSource.collectionView numberOfItemsInSection:2];
 
     HYPFormSection *section = [self.formsManager sectionWithID:@"companies[1]"];
     NSInteger numberOfFields = section.fields.count;
@@ -179,7 +183,7 @@
     section = [self.formsManager sectionWithID:@"companies[1]"];
     XCTAssertEqual(section.fields.count, numberOfFields + 1);
 
-    XCTAssertEqual(numberOfItemsBeforeInsert + 1, [self.collectionView numberOfItemsInSection:2]);
+    XCTAssertEqual(numberOfItemsBeforeInsert + 1, [self.dataSource.collectionView numberOfItemsInSection:2]);
 }
 
 - (void)testInsertSectionInForm
@@ -202,11 +206,11 @@
                                                        disabledFieldsIDs:nil
                                                            isLastSection:YES];
 
-    NSInteger numberOfItemsBeforeInsert = [self.collectionView numberOfItemsInSection:2];
+    NSInteger numberOfItemsBeforeInsert = [self.dataSource.collectionView numberOfItemsInSection:2];
 
     [self.dataSource insertSection:section inFormWithID:@"companies"];
 
-    XCTAssertEqual(numberOfItemsBeforeInsert + 2, [self.collectionView numberOfItemsInSection:2]);
+    XCTAssertEqual(numberOfItemsBeforeInsert + 2, [self.dataSource.collectionView numberOfItemsInSection:2]);
 }
 
 - (void)testRemoveFieldWithID
