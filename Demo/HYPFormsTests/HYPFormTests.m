@@ -13,8 +13,7 @@
     HYPForm *form = [[HYPForm alloc] initWithDictionary:@{@"id": @"some_form",
                                                           @"title": @"Some form"}
                                                position:0
-                                               disabled:NO
-                                      disabledFieldsIDs:nil];
+                                               disabled:NO];
 
     XCTAssertNotNil(form);
     XCTAssertEqualObjects(form.formID, @"some_form");
@@ -24,8 +23,7 @@
     form = [[HYPForm alloc] initWithDictionary:@{@"id": @"other_form",
                                                  @"title": @"Other form"}
                                       position:1
-                                      disabled:NO
-                             disabledFieldsIDs:nil];
+                                      disabled:NO];
 
     XCTAssertNotNil(form);
     XCTAssertEqualObjects(form.formID, @"other_form");

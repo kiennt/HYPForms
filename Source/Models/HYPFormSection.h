@@ -18,7 +18,6 @@
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary
                           position:(NSInteger)position
                           disabled:(BOOL)disabled
-                 disabledFieldsIDs:(NSArray *)disabledFieldsIDs
                      isLastSection:(BOOL)isLastSection NS_DESIGNATED_INITIALIZER;
 
 + (void)sectionAndIndexForField:(HYPFormField *)field

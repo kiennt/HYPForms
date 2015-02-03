@@ -34,7 +34,6 @@
 
     self.manager = [[HYPFormsManager alloc] initWithJSON:JSON
                                            initialValues:nil
-                                        disabledFieldIDs:nil
                                                 disabled:NO];
 
     self.dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:collectionView

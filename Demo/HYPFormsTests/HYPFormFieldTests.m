@@ -30,7 +30,6 @@
 
     self.manager = [[HYPFormsManager alloc] initWithJSON:JSON
                                            initialValues:nil
-                                        disabledFieldIDs:nil
                                                 disabled:NO];
 
     self.dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:collectionView
@@ -56,8 +55,7 @@
                                                                                        @"min_length": @2}
                                                                      }
                                                           position:0
-                                                          disabled:NO
-                                                 disabledFieldsIDs:nil];
+                                                          disabled:NO];
 
     XCTAssertNotNil(field);
     XCTAssertEqualObjects(field.position, @0);
@@ -76,8 +74,7 @@
                                                                   @"height": @4}
                                                        }
                                             position:1
-                                            disabled:NO
-                                   disabledFieldsIDs:@[@"start_date"]];
+                                            disabled:NO];
 
     XCTAssertNotNil(field);
     XCTAssertEqualObjects(field.position, @1);
@@ -97,7 +94,6 @@
     HYPFormsManager *manager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                        initialValues:@{@"first_name" : @"Elvis",
                                                                        @"last_name" : @"Nunez"}
-                                                    disabledFieldIDs:nil
                                                             disabled:NO];
 
     HYPFormField *field = [manager fieldWithID:@"first_name" includingHiddenFields:YES];

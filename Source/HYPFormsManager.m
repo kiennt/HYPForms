@@ -26,20 +26,17 @@
 
 - (instancetype)initWithJSON:(id)JSON
                initialValues:(NSDictionary *)initialValues
-            disabledFieldIDs:(NSArray *)disabledFieldIDs
                     disabled:(BOOL)disabled
 {
     self = [super init];
     if (!self) return nil;
 
-    _disabledFieldsIDs = disabledFieldIDs;
     _disabledForm = disabled;
 
     [self.values addEntriesFromDictionary:initialValues];
 
     [self generateFormsWithJSON:JSON
                   initialValues:initialValues
-              disabledFieldsIDs:disabledFieldIDs
                        disabled:disabled];
 
     return self;
@@ -74,15 +71,6 @@
     return _hiddenSections;
 }
 
-- (NSArray *)disabledFieldsIDs
-{
-    if (_disabledFieldsIDs) return _disabledFieldsIDs;
-
-    _disabledFieldsIDs = [NSArray new];
-
-    return _disabledFieldsIDs;
-}
-
 - (NSMutableDictionary *)values
 {
     if (_values) return _values;
@@ -110,21 +98,17 @@
 
 - (void)generateFormsWithJSON:(NSArray *)JSON
                 initialValues:(NSDictionary *)initialValues
-            disabledFieldsIDs:(NSArray *)disabledFieldsIDs
                      disabled:(BOOL)disabled
 {
     NSMutableArray *hideTargets = [NSMutableArray new];
     NSMutableArray *updateTargets = [NSMutableArray new];
     NSMutableArray *disabledFields = [NSMutableArray new];
 
-    [disabledFields addObjectsFromArray:disabledFieldsIDs];
-
     [JSON enumerateObjectsUsingBlock:^(NSDictionary *formDict, NSUInteger formIndex, BOOL *stop) {
 
         HYPForm *form = [[HYPForm alloc] initWithDictionary:formDict
                                                    position:formIndex
-                                                   disabled:disabled
-                                          disabledFieldsIDs:disabledFieldsIDs];
+                                                   disabled:disabled];
 
         for (HYPFormField *field in form.fields) {
 
@@ -177,7 +161,6 @@
         [self.forms addObject:form];
     }];
 
-    self.disabledFieldsIDs = disabledFields;
     [self updateTargets:updateTargets];
 
     for (HYPFormTarget *target in hideTargets) {

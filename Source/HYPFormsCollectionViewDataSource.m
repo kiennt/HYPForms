@@ -321,8 +321,8 @@ static const CGFloat HYPFormsDispatchTime = 0.05f;
 
     for (NSString *fieldID in fields) {
         HYPFormField *field = [fields valueForKey:fieldID];
-        BOOL shouldChangeState = (![self.formsManager.disabledFieldsIDs containsObject:fieldID]);
-
+        BOOL shouldChangeState = NO;//(![self.formsManager.disabledFieldsIDs containsObject:fieldID]);
+#warning omg fix
         if (disabled) {
             field.disabled = YES;
         } else if (shouldChangeState) {

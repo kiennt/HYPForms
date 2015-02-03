@@ -20,7 +20,6 @@ static NSString * const HYPFormatterSelector = @"formatString:reverse:";
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary
                           position:(NSInteger)position
                           disabled:(BOOL)disabled
-                 disabledFieldsIDs:(NSArray *)disabledFieldsIDs
 {
     self = [super init];
     if (!self) return nil;
@@ -53,8 +52,8 @@ static NSString * const HYPFormatterSelector = @"formatString:reverse:";
 
     _targets = targets;
 
-    BOOL shouldDisable = (disabled || [disabledFieldsIDs containsObject:_fieldID]);
-
+    BOOL shouldDisable = NO;//(disabled || [disabledFieldsIDs containsObject:_fieldID]);
+#warning fix me
     if (shouldDisable) _disabled = YES;
 
     NSMutableArray *values = [NSMutableArray new];

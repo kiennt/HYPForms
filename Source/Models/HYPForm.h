@@ -13,8 +13,7 @@
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary
                           position:(NSInteger)position
-                          disabled:(BOOL)disabled
-                 disabledFieldsIDs:(NSArray *)disabledFieldsIDs NS_DESIGNATED_INITIALIZER;
+                          disabled:(BOOL)disabled NS_DESIGNATED_INITIALIZER;
 
 - (NSArray *)fields;
 

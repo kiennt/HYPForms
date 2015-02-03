@@ -13,7 +13,6 @@
     HYPFormSection *section = [[HYPFormSection alloc] initWithDictionary:@{@"id": @"section"}
                                                                 position:0
                                                                 disabled:YES
-                                                       disabledFieldsIDs:nil
                                                            isLastSection:NO];
 
     XCTAssertNotNil(section);
@@ -24,7 +23,6 @@
     section = [[HYPFormSection alloc] initWithDictionary:@{@"id": @"something"}
                                                 position:1
                                                 disabled:YES
-                                       disabledFieldsIDs:nil
                                            isLastSection:YES];
 
     XCTAssertNotNil(section);

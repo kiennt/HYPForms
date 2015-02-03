@@ -21,7 +21,6 @@
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary
                           position:(NSInteger)position
                           disabled:(BOOL)disabled
-                 disabledFieldsIDs:(NSArray *)disabledFieldsIDs
 {
     self = [super init];
     if (!self) return nil;
@@ -41,7 +40,6 @@
         HYPFormSection *section = [[HYPFormSection alloc] initWithDictionary:sectionDict
                                                                     position:sectionIndex
                                                                     disabled:disabled
-                                                           disabledFieldsIDs:disabledFieldsIDs
                                                                isLastSection:isLastSection];
 
         section.form = self;

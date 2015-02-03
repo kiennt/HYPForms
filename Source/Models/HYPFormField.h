@@ -41,8 +41,7 @@ typedef NS_ENUM(NSInteger, HYPFormFieldType) {
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary
                           position:(NSInteger)position
-                          disabled:(BOOL)disabled
-                 disabledFieldsIDs:(NSArray *)disabledFieldsIDs NS_DESIGNATED_INITIALIZER;
+                          disabled:(BOOL)disabled NS_DESIGNATED_INITIALIZER;
 
 + (HYPFormField *)fieldAtIndexPath:(NSIndexPath *)indexPath inSection:(HYPFormSection *)section;
 

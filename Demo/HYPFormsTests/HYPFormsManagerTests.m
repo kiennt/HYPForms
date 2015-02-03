@@ -27,7 +27,6 @@
 
     HYPFormsManager *manager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                        initialValues:nil
-                                                    disabledFieldIDs:nil
                                                             disabled:NO];
 
     XCTAssertNotNil(manager.forms);
@@ -50,7 +49,6 @@
                                                        initialValues:@{@"contract_type" : [NSNull null],
                                                                        @"start_date" : date,
                                                                        @"base_salary": @2}
-                                                    disabledFieldIDs:nil
                                                             disabled:NO];
 
     XCTAssertEqualObjects([manager.values objectForKey:@"contract_type"], @0);
@@ -66,7 +64,6 @@
     HYPFormsManager *manager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                        initialValues:@{@"base_salary" : @1,
                                                                        @"bonus" : @100}
-                                                    disabledFieldIDs:nil
                                                             disabled:NO];
 
     XCTAssertEqualObjects([manager.values objectForKey:@"base_salary"], @1);
@@ -80,7 +77,6 @@
 
     HYPFormsManager *manager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                        initialValues:@{@"contract_type" : @1}
-                                                    disabledFieldIDs:nil
                                                             disabled:NO];
 
     XCTAssertTrue(manager.hiddenFieldsAndFieldIDsDictionary.count > 0);
@@ -94,7 +90,6 @@
 
     HYPFormsManager *manager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                        initialValues:nil
-                                                    disabledFieldIDs:nil
                                                             disabled:NO];
 
     NSDictionary *requiredFormFields = [manager requiredFormFields];
@@ -113,7 +108,6 @@
 
     HYPFormsManager *manager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                        initialValues:nil
-                                                    disabledFieldIDs:nil
                                                             disabled:NO];
 
     NSArray *fields = [manager invalidFormFields];
@@ -130,7 +124,6 @@
     HYPFormsManager *manager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                        initialValues:@{@"first_name" : @"Elvis",
                                                                        @"last_name" : @"Nunez"}
-                                                    disabledFieldIDs:nil
                                                             disabled:NO];
 
     HYPFormField *firstNameField = [manager fieldWithID:@"first_name" includingHiddenFields:NO];
@@ -158,7 +151,6 @@
     HYPFormsManager *normalManager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                              initialValues:@{@"contract_type" : @1,
                                                                              @"salary_type": @1}
-                                                          disabledFieldIDs:nil
                                                                   disabled:NO];
 
     NSUInteger numberOfFields = [[[normalManager.forms firstObject] fields] count];
@@ -167,7 +159,6 @@
     HYPFormsManager *evaluatedManager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                                 initialValues:@{@"contract_type" : @0,
                                                                                 @"salary_type": @0}
-                                                             disabledFieldIDs:nil
                                                                      disabled:NO];
 
     NSUInteger numberOfFieldsWithHiddenTargets = [[[evaluatedManager.forms firstObject] fields] count];
@@ -181,7 +172,6 @@
 
     HYPFormsManager *normalManager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                              initialValues:nil
-                                                          disabledFieldIDs:nil
                                                                   disabled:NO];
 
     NSUInteger numberOfFields = [[[normalManager.forms firstObject] fields] count];
@@ -190,7 +180,6 @@
     HYPFormsManager *evaluatedManager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                                 initialValues:@{@"contract_type" : @1,
                                                                                 @"salary_type": @1}
-                                                             disabledFieldIDs:nil
                                                                      disabled:NO];
 
     NSUInteger numberOfFieldsWithHiddenTargets = [[[evaluatedManager.forms firstObject] fields] count];
@@ -205,7 +194,6 @@
     HYPFormsManager *normalManager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                              initialValues:@{@"contract_type" : @1,
                                                                              @"salary_type": @1}
-                                                          disabledFieldIDs:nil
                                                                   disabled:NO];
 
     NSUInteger numberOfSections = [[[normalManager.forms firstObject] sections] count];
@@ -214,7 +202,6 @@
     HYPFormsManager *evaluatedManager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                                 initialValues:@{@"contract_type" : @0,
                                                                                 @"salary_type": @0}
-                                                             disabledFieldIDs:nil
                                                                      disabled:NO];
 
     NSUInteger numberOfSectionsWithHiddenTargets = [[[evaluatedManager.forms firstObject] sections] count];
@@ -228,7 +215,6 @@
 
     HYPFormsManager *normalManager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                              initialValues:nil
-                                                          disabledFieldIDs:nil
                                                                   disabled:NO];
 
     NSUInteger numberOfSections = [[[normalManager.forms firstObject] sections] count];
@@ -237,7 +223,6 @@
     HYPFormsManager *evaluatedManager = [[HYPFormsManager alloc] initWithJSON:JSON
                                                                 initialValues:@{@"contract_type" : @1,
                                                                                 @"salary_type": @1}
-                                                             disabledFieldIDs:nil
                                                                      disabled:NO];
 
     NSUInteger numberOfSectionsWithHiddenTargets = [[[evaluatedManager.forms firstObject] sections] count];
