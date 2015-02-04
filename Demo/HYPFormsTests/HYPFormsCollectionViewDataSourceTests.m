@@ -11,119 +11,126 @@
 
 #import "NSJSONSerialization+ANDYJSONFile.h"
 
-@interface HYPFormsCollectionViewDataSourceTests : XCTestCase
+@interface HYPFormsCollectionViewDataSource ()
 
 @property (nonatomic, strong) HYPFormsManager *formsManager;
-@property (nonatomic, strong) HYPFormsCollectionViewDataSource *dataSource;
+
+@end
+
+@interface HYPFormsCollectionViewDataSourceTests : XCTestCase
 
 @end
 
 @implementation HYPFormsCollectionViewDataSourceTests
 
-- (void)setUp
+- (HYPFormsCollectionViewDataSource *)dataSource
 {
-    [super setUp];
-
     NSArray *JSON = [NSJSONSerialization JSONObjectWithContentsOfFile:@"forms.json"];
 
-    self.formsManager = [[HYPFormsManager alloc] initWithJSON:JSON
-                                                initialValues:nil
-                                             disabledFieldIDs:nil
-                                                     disabled:NO];
+    HYPFormsManager *formsManager = [[HYPFormsManager alloc] initWithJSON:JSON
+                                                            initialValues:nil
+                                                         disabledFieldIDs:nil
+                                                                 disabled:NO];
 
-    self.dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:nil
-                                                                       andFormsManager:self.formsManager];
-}
+    HYPFormsCollectionViewDataSource *dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:nil
+                                                                                                    andFormsManager:formsManager];
 
-- (void)tearDown
-{
-    self.formsManager = nil;
-    self.dataSource = nil;
-
-    [super tearDown];
+    return dataSource;
 }
 
 - (void)testIndexInForms
 {
-    [self.dataSource processTarget:[HYPFormTarget hideFieldTargetWithID:@"display_name"]];
-    [self.dataSource processTarget:[HYPFormTarget showFieldTargetWithID:@"display_name"]];
-    HYPFormField *field = [self.formsManager fieldWithID:@"display_name" includingHiddenFields:YES];
-    NSUInteger index = [field indexInSectionUsingForms:self.formsManager.forms];
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
+
+    [dataSource processTarget:[HYPFormTarget hideFieldTargetWithID:@"display_name"]];
+    [dataSource processTarget:[HYPFormTarget showFieldTargetWithID:@"display_name"]];
+    HYPFormField *field = [dataSource.formsManager fieldWithID:@"display_name" includingHiddenFields:YES];
+    NSUInteger index = [field indexInSectionUsingForms:dataSource.formsManager.forms];
     XCTAssertEqual(index, 2);
 
-    [self.dataSource processTarget:[HYPFormTarget hideFieldTargetWithID:@"username"]];
-    [self.dataSource processTarget:[HYPFormTarget showFieldTargetWithID:@"username"]];
-    field = [self.formsManager fieldWithID:@"username" includingHiddenFields:YES];
-    index = [field indexInSectionUsingForms:self.formsManager.forms];
+    [dataSource processTarget:[HYPFormTarget hideFieldTargetWithID:@"username"]];
+    [dataSource processTarget:[HYPFormTarget showFieldTargetWithID:@"username"]];
+    field = [dataSource.formsManager fieldWithID:@"username" includingHiddenFields:YES];
+    index = [field indexInSectionUsingForms:dataSource.formsManager.forms];
     XCTAssertEqual(index, 2);
 
-    [self.dataSource processTargets:[HYPFormTarget hideFieldTargetsWithIDs:@[@"first_name",
-                                                                             @"address",
-                                                                             @"username"]]];
-    [self.dataSource processTarget:[HYPFormTarget showFieldTargetWithID:@"username"]];
-    field = [self.formsManager fieldWithID:@"username" includingHiddenFields:YES];
-    index = [field indexInSectionUsingForms:self.formsManager.forms];
+    [dataSource processTargets:[HYPFormTarget hideFieldTargetsWithIDs:@[@"first_name",
+                                                                        @"address",
+                                                                        @"username"]]];
+    [dataSource processTarget:[HYPFormTarget showFieldTargetWithID:@"username"]];
+    field = [dataSource.formsManager fieldWithID:@"username" includingHiddenFields:YES];
+    index = [field indexInSectionUsingForms:dataSource.formsManager.forms];
     XCTAssertEqual(index, 1);
-    [self.dataSource processTargets:[HYPFormTarget showFieldTargetsWithIDs:@[@"first_name",
-                                                                             @"address"]]];
+    [dataSource processTargets:[HYPFormTarget showFieldTargetsWithIDs:@[@"first_name",
+                                                                        @"address"]]];
 
-    [self.dataSource processTargets:[HYPFormTarget hideFieldTargetsWithIDs:@[@"last_name",
-                                                                             @"address"]]];
-    [self.dataSource processTarget:[HYPFormTarget showFieldTargetWithID:@"address"]];
-    field = [self.formsManager fieldWithID:@"address" includingHiddenFields:YES];
-    index = [field indexInSectionUsingForms:self.formsManager.forms];
+    [dataSource processTargets:[HYPFormTarget hideFieldTargetsWithIDs:@[@"last_name",
+                                                                        @"address"]]];
+    [dataSource processTarget:[HYPFormTarget showFieldTargetWithID:@"address"]];
+    field = [dataSource.formsManager fieldWithID:@"address" includingHiddenFields:YES];
+    index = [field indexInSectionUsingForms:dataSource.formsManager.forms];
     XCTAssertEqual(index, 0);
-    [self.dataSource processTarget:[HYPFormTarget showFieldTargetWithID:@"last_name"]];
+    [dataSource processTarget:[HYPFormTarget showFieldTargetWithID:@"last_name"]];
 }
 
 - (void)testEnableAndDisableTargets
 {
-    HYPFormField *targetField = [self.formsManager fieldWithID:@"base_salary" includingHiddenFields:YES];
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
+
+    HYPFormField *targetField = [dataSource.formsManager fieldWithID:@"base_salary" includingHiddenFields:YES];
     XCTAssertFalse(targetField.isDisabled);
 
     HYPFormTarget *disableTarget = [HYPFormTarget disableFieldTargetWithID:@"base_salary"];
-    [self.dataSource processTarget:disableTarget];
+    [dataSource processTarget:disableTarget];
     XCTAssertTrue(targetField.isDisabled);
 
     HYPFormTarget *enableTarget = [HYPFormTarget enableFieldTargetWithID:@"base_salary"];
-    [self.dataSource processTargets:@[enableTarget]];
+    [dataSource processTargets:@[enableTarget]];
     XCTAssertFalse(targetField.isDisabled);
 
-    [self.dataSource disable];
+    [dataSource disable];
     XCTAssertTrue(targetField.isDisabled);
 
-    [self.dataSource enable];
+    [dataSource enable];
     XCTAssertFalse(targetField.isDisabled);
 }
 
 - (void)testInitiallyDisabled
 {
-    HYPFormField *totalField = [self.formsManager fieldWithID:@"total" includingHiddenFields:YES];
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
+
+    HYPFormField *totalField = [dataSource.formsManager fieldWithID:@"total" includingHiddenFields:YES];
     XCTAssertTrue(totalField.disabled);
 }
 
 - (void)testUpdatingTargetValue
 {
-    HYPFormField *targetField = [self.formsManager fieldWithID:@"display_name" includingHiddenFields:YES];
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
+
+    HYPFormField *targetField = [dataSource.formsManager fieldWithID:@"display_name" includingHiddenFields:YES];
     XCTAssertNil(targetField.fieldValue);
 
     HYPFormTarget *updateTarget = [HYPFormTarget updateFieldTargetWithID:@"display_name"];
     updateTarget.targetValue = @"John Hyperseed";
 
-    [self.dataSource processTarget:updateTarget];
+    [dataSource processTarget:updateTarget];
     XCTAssertEqualObjects(targetField.fieldValue, @"John Hyperseed");
 }
 
 - (void)testDefaultValue
 {
-    HYPFormField *usernameField = [self.formsManager fieldWithID:@"username" includingHiddenFields:YES];
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
+
+    HYPFormField *usernameField = [dataSource.formsManager fieldWithID:@"username" includingHiddenFields:YES];
     XCTAssertNotNil(usernameField.fieldValue);
 }
 
 - (void)testCondition
 {
-    HYPFormField *displayNameField = [self.formsManager fieldWithID:@"display_name" includingHiddenFields:YES];
-    HYPFormField *usernameField = [self.formsManager fieldWithID:@"username" includingHiddenFields:YES];
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
+
+    HYPFormField *displayNameField = [dataSource.formsManager fieldWithID:@"display_name" includingHiddenFields:YES];
+    HYPFormField *usernameField = [dataSource.formsManager fieldWithID:@"username" includingHiddenFields:YES];
     HYPFieldValue *fieldValue = usernameField.fieldValue;
     XCTAssertEqualObjects(fieldValue.valueID, @0);
 
@@ -131,25 +138,29 @@
     updateTarget.targetValue = @"Mr.Melk";
 
     updateTarget.condition = @"$username == 2";
-    [self.dataSource processTarget:updateTarget];
+    [dataSource processTarget:updateTarget];
     XCTAssertNil(displayNameField.fieldValue);
 
     updateTarget.condition = @"$username == 0";
-    [self.dataSource processTarget:updateTarget];
+    [dataSource processTarget:updateTarget];
     XCTAssertEqualObjects(displayNameField.fieldValue, @"Mr.Melk");
 }
 
 - (void)testReloadWithDictionary
 {
-    [self.dataSource reloadWithDictionary:@{@"first_name" : @"Elvis",
-                                            @"last_name" : @"Nunez"}];
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
 
-    HYPFormField *field = [self.formsManager fieldWithID:@"display_name" includingHiddenFields:YES];
+    [dataSource reloadWithDictionary:@{@"first_name" : @"Elvis",
+                                       @"last_name" : @"Nunez"}];
+
+    HYPFormField *field = [dataSource.formsManager fieldWithID:@"display_name" includingHiddenFields:YES];
     XCTAssertEqualObjects(field.fieldValue, @"Elvis Nunez");
 }
 
 - (void)testInsertFieldInSection
 {
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
+
     HYPFormField *field = [[HYPFormField alloc] initWithDictionary:@{@"id" : @"companies[1].fax_number",
                                                                      @"title" : @"Fax number 1",
                                                                      @"type" : @"number",
@@ -162,13 +173,13 @@
 
     // NSInteger numberOfItemsBeforeInsert = [self.collectionView numberOfItemsInSection:2];
 
-    HYPFormSection *section = [self.formsManager sectionWithID:@"companies[1]"];
+    HYPFormSection *section = [dataSource.formsManager sectionWithID:@"companies[1]"];
     NSInteger numberOfFields = section.fields.count;
     XCTAssertEqual(numberOfFields, 2);
 
-    [self.dataSource insertField:field inSectionWithID:@"companies[1]"];
+    [dataSource insertField:field inSectionWithID:@"companies[1]"];
 
-    section = [self.formsManager sectionWithID:@"companies[1]"];
+    section = [dataSource.formsManager sectionWithID:@"companies[1]"];
     XCTAssertEqual(section.fields.count, numberOfFields + 1);
 
     // XCTAssertEqual(numberOfItemsBeforeInsert + 1, [self.collectionView numberOfItemsInSection:2]);
@@ -176,6 +187,8 @@
 
 - (void)testInsertSectionInForm
 {
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
+
     HYPFormSection *section = [[HYPFormSection alloc] initWithDictionary:@{@"id" : @"companies[2]",
                                                                            @"fields" : @[@{@"id" : @"companies[2].name",
                                                                                            @"title" : @"Name 3",
@@ -196,19 +209,23 @@
 
     // NSInteger numberOfItemsBeforeInsert = [self.collectionView numberOfItemsInSection:2];
 
-    [self.dataSource insertSection:section inFormWithID:@"companies"];
+    [dataSource insertSection:section inFormWithID:@"companies"];
 
     // XCTAssertEqual(numberOfItemsBeforeInsert + 2, [self.collectionView numberOfItemsInSection:2]);
 }
 
 - (void)testRemoveFieldWithID
 {
-    [self.dataSource removeFieldWithID:@"companies[0].name"];
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
+
+    [dataSource removeFieldWithID:@"companies[0].name"];
 }
 
 - (void)testRemoveSectionWithID
 {
-    [self.dataSource removeSectionWithID:@"companies[0]"];
+    HYPFormsCollectionViewDataSource *dataSource = [self dataSource];
+
+    [dataSource removeSectionWithID:@"companies[0]"];
 }
 
 @end
