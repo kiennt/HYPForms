@@ -23,7 +23,7 @@ static const CGFloat HYPFormsDispatchTime = 0.05f;
 @property (nonatomic, weak) UICollectionView *collectionView;
 @property (nonatomic) UIEdgeInsets originalInset;
 @property (nonatomic) BOOL disabled;
-@property (nonatomic, weak) HYPFormsManager *formsManager;
+@property (nonatomic, strong) HYPFormsManager *formsManager;
 
 @end
 
