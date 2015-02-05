@@ -17,13 +17,12 @@
 
 static const CGFloat HYPFormsDispatchTime = 0.05f;
 
-@interface HYPFormsCollectionViewDataSource () <HYPBaseFormFieldCellDelegate, HYPFormHeaderViewDelegate
-, UICollectionViewDataSource>
+@interface HYPFormsCollectionViewDataSource () <HYPBaseFormFieldCellDelegate, HYPFormHeaderViewDelegate>
 
-@property (nonatomic, weak) UICollectionView *collectionView;
 @property (nonatomic) UIEdgeInsets originalInset;
 @property (nonatomic) BOOL disabled;
 @property (nonatomic, strong) HYPFormsManager *formsManager;
+@property (nonatomic, strong) UICollectionView *collectionView;
 
 @end
 
@@ -696,6 +695,13 @@ static const CGFloat HYPFormsDispatchTime = 0.05f;
 - (void)formHeaderViewWasPressed:(HYPFormHeaderView *)headerView
 {
     [self collapseFieldsInSection:headerView.section collectionView:self.collectionView];
+}
+
+#pragma mark - HYPFormsLayoutDataSource
+
+- (NSArray *)forms
+{
+    return self.formsManager.forms;
 }
 
 @end

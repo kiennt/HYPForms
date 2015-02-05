@@ -8,16 +8,18 @@
 #import "HYPFormSection.h"
 #import "HYPFormsManager.h"
 #import "HYPFormTarget.h"
+#import "HYPImageFormFieldCell.h"
 
 #import "NSJSONSerialization+ANDYJSONFile.h"
 
 @interface HYPFormsCollectionViewDataSource ()
 
 @property (nonatomic, strong) HYPFormsManager *formsManager;
+@property (nonatomic, strong) UICollectionView *collectionView;
 
 @end
 
-@interface HYPFormsCollectionViewDataSourceTests : XCTestCase
+@interface HYPFormsCollectionViewDataSourceTests : XCTestCase <HYPFormsCollectionViewDataSourceDataSource>
 
 @end
 
@@ -25,6 +27,13 @@
 
 - (HYPFormsCollectionViewDataSource *)dataSource
 {
+    HYPFormsLayout *layout = [[HYPFormsLayout alloc] init];
+
+    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:[[UIScreen mainScreen] bounds]
+                                                          collectionViewLayout:layout];
+
+    [collectionView registerClass:[HYPImageFormFieldCell class] forCellWithReuseIdentifier:HYPImageFormFieldCellIdentifier];
+
     NSArray *JSON = [NSJSONSerialization JSONObjectWithContentsOfFile:@"forms.json"];
 
     HYPFormsManager *formsManager = [[HYPFormsManager alloc] initWithJSON:JSON
@@ -32,8 +41,12 @@
                                                          disabledFieldIDs:nil
                                                                  disabled:NO];
 
-    HYPFormsCollectionViewDataSource *dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:nil
+    HYPFormsCollectionViewDataSource *dataSource = [[HYPFormsCollectionViewDataSource alloc] initWithCollectionView:collectionView
                                                                                                     andFormsManager:formsManager];
+
+    collectionView.dataSource = dataSource;
+    layout.dataSource = dataSource;
+    dataSource.dataSource = self;
 
     return dataSource;
 }
@@ -171,7 +184,17 @@
                                                           disabled:NO
                                                  disabledFieldsIDs:nil];
 
-    // NSInteger numberOfItemsBeforeInsert = [self.collectionView numberOfItemsInSection:2];
+    NSInteger sections = [dataSource.collectionView numberOfSections];
+    for (NSInteger i = 0; i < sections; i++) {
+        NSInteger rows = [dataSource.collectionView numberOfItemsInSection:i];
+        for (NSInteger j = 0; j < rows; j++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:j inSection:i];
+            UICollectionViewCell *cell = [dataSource.collectionView cellForItemAtIndexPath:indexPath];
+            NSLog(@"found cell: (%@) %@", indexPath, cell);
+        }
+    }
+
+    NSInteger numberOfItemsBeforeInsert = [dataSource.collectionView numberOfItemsInSection:2];
 
     HYPFormSection *section = [dataSource.formsManager sectionWithID:@"companies[1]"];
     NSInteger numberOfFields = section.fields.count;
@@ -182,7 +205,7 @@
     section = [dataSource.formsManager sectionWithID:@"companies[1]"];
     XCTAssertEqual(section.fields.count, numberOfFields + 1);
 
-    // XCTAssertEqual(numberOfItemsBeforeInsert + 1, [self.collectionView numberOfItemsInSection:2]);
+    XCTAssertEqual(numberOfItemsBeforeInsert + 1, [dataSource.collectionView numberOfItemsInSection:2]);
 }
 
 - (void)testInsertSectionInForm
@@ -207,11 +230,11 @@
                                                        disabledFieldsIDs:nil
                                                            isLastSection:YES];
 
-    // NSInteger numberOfItemsBeforeInsert = [self.collectionView numberOfItemsInSection:2];
+    NSInteger numberOfItemsBeforeInsert = [dataSource.collectionView numberOfItemsInSection:2];
 
     [dataSource insertSection:section inFormWithID:@"companies"];
 
-    // XCTAssertEqual(numberOfItemsBeforeInsert + 2, [self.collectionView numberOfItemsInSection:2]);
+    XCTAssertEqual(numberOfItemsBeforeInsert + 2, [dataSource.collectionView numberOfItemsInSection:2]);
 }
 
 - (void)testRemoveFieldWithID
@@ -227,5 +250,22 @@
 
     [dataSource removeSectionWithID:@"companies[0]"];
 }
+
+#pragma mark - HYPFormsCollectionViewDataSourceDataSource
+
+- (UICollectionViewCell *)formsCollectionDataSource:(HYPFormsCollectionViewDataSource *)formsCollectionDataSource
+                                       cellForField:(HYPFormField *)field atIndexPath:(NSIndexPath *)indexPath
+{
+    HYPImageFormFieldCell *cell;
+
+    BOOL isImageCell = (field.type == HYPFormFieldTypeCustom && [field.typeString isEqual:@"image"]);
+    if (isImageCell) {
+        cell = [formsCollectionDataSource.collectionView dequeueReusableCellWithReuseIdentifier:HYPImageFormFieldCellIdentifier
+                                                                                   forIndexPath:indexPath];
+    }
+
+    return cell;
+}
+
 
 @end
